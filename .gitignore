@@ -135,3 +135,6 @@ uploads/
 zepargn-firebase-adminsdk-ik9dq-fbd9838612.json
 metrics.csv
 zepargn-firebase-adminsdk-ik9dq-9778d99996.json
+
+cert.pem
+key.pem
