@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html>
+<body>
+    <% if (error) { %>
+        <p><strong>Erreur :</strong> <%= error %></p>
+    <% } %>
+    <form action="http://localhost:3000/submit" method="POST">
+        <input type="text" name="data" value="Test CSRF" required />
+        <button type="submit">Envoyer</button>
+    </form>
+</body>
+</html>
+
