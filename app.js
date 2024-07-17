@@ -26,10 +26,6 @@ app.get('/', (req, res) => {
     res.render('index', { message: null });
 });
 
-app.get('/test', (req, res) => {
-    res.render('test', { error: null });
-});
-
 // SQL Injection Vulnerability
 app.post('/login', (req, res) => {
     const username = req.body.username;
@@ -75,8 +71,8 @@ app.post('/submit', parseForm, csrfProtection, (req, res) => {
 
 
 const options = {
-    key: fs.readFileSync(path.join(__dirname, 'server.key')),
-    cert: fs.readFileSync(path.join(__dirname, 'server.cert'))
+    key: fs.readFileSync('key.pem'),
+    cert: fs.readFileSync('cert.pem')
 };
 
 
