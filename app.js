@@ -4,6 +4,7 @@ const cookieParser = require('cookie-parser');
 const csrf = require('csurf');
 const sqlite3 = require('sqlite3').verbose();
 const path = require('path');
+const { escape } = require('querystring');
 
 const app = express();
 const port = 3000;
@@ -42,9 +43,11 @@ app.post('/login', (req, res) => {
 
 // XSS Vulnerability
 app.get('/xss', (req, res) => {
-    const name = req.query.name;
-    res.send(`<h1>Hello, ${name}</h1>`);
+    const name = req.query.name || '';
+    const encodedName = name.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+    res.send(`<h1>Hello, ${encodedName}</h1>`);
 });
+
 
 // CSRF Vulnerability
 app.get('/form', (req, res) => {
