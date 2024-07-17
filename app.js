@@ -27,8 +27,8 @@ app.get('/', (req, res) => {
 app.post('/login', (req, res) => {
     const username = req.body.username;
     const password = req.body.password;
-    const query = `SELECT * FROM users WHERE username = '${username}' AND password = '${password}'`;
-    db.get(query, (err, row) => {
+    const query = `SELECT * FROM users WHERE username = ? AND password = ?`;
+    db.get(query, [username, password], (err, row) => {
         if (err) {
             console.error(err);
             res.status(500).send('Internal Server Error');
@@ -43,8 +43,10 @@ app.post('/login', (req, res) => {
 // XSS Vulnerability
 app.get('/xss', (req, res) => {
     const name = req.query.name;
-    res.send(`<h1>Hello, ${name}</h1>`);
+    const escapeName =escapeHTML(name)
+    res.send(`<h1>Hello, ${escapeName}</h1>`);
 });
+
 
 // CSRF Vulnerability
 app.get('/form', (req, res) => {
