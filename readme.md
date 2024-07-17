@@ -29,17 +29,3 @@ Préparez une présentation des résultats et des mesures de sécurité mises en
 
 Fork into your own repositery , create a new branch under your name (name_vulnerable-app) and work on this branch. At the end make a PR to my repositery.
 
-
-# Rapport sur les vulnérabilités identifiées et les correctifs appliqués
-
-- Injection SQL
-  - Vulnérabilité identifiée: Les requêtes SQL étaient générées en concaténant directement les entrées utilisqteur, ce qui pouvait permettre des injections SQL.
-  - Correctif appliqué: Utilisation des requêtes préparées pour éviter l'injection SQL.
-  
-- XSS
-  - Vulnérabilité identifiée: Les entrées utilisateur étaient afficheées directement sans être échappées; ce qui permettait l'exécution de scripts malveillants.
-  - Correctif appliqué: Echappement des caractères spéciaux HTML pour éviter l'exécution de scripts malveillants.
-  
-- CSRF
-  - Vulnérabilité identifiée: Les for;ulaires sensibles n'incluaient pas de protections contre les attaques CSRF.
-  - Correctif appliqué: Utilisation de jetons CSRF pour valider les requêtes POST.
