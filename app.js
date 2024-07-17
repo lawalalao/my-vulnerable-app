@@ -4,9 +4,21 @@ const cookieParser = require('cookie-parser');
 const csrf = require('csurf');
 const sqlite3 = require('sqlite3').verbose();
 const path = require('path');
-
+const helmet = require('helmet');
+const bcrypt = require('bcrypt');
 const app = express();
-const port = 3000;
+const port = 5000;
+
+// Middlewares pour la sécurité
+app.use(helmet()); //  HTTP secure
+
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(cookieParser());
+app.set('view engine', 'ejs');
+
+//CSRF
+const csrfProtection = csrf({ cookie: true });
+
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
@@ -16,7 +28,8 @@ app.set('view engine', 'ejs');
 const db = new sqlite3.Database(':memory:');
 db.serialize(() => {
     db.run("CREATE TABLE users (id INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT, password TEXT)");
-    db.run("INSERT INTO users (username, password) VALUES ('admin', 'password')");
+    const hashedPassword = bcrypt.hashSync('password', 10);
+    db.run("INSERT INTO users (username, password) VALUES ('admin', ?)", [hashedPassword]);
 });
 
 app.get('/', (req, res) => {
@@ -32,8 +45,9 @@ app.post('/login', (req, res) => {
         if (err) {
             console.error(err);
             res.status(500).send('Internal Server Error');
-        } else if (row) {
+        } else if (row && bcrypt.compareSync(password, row.password)) {
             res.send('Login Successful');
+
         } else {
             res.render('index', { message: 'Invalid Credentials' });
         }
@@ -47,14 +61,16 @@ app.get('/xss', (req, res) => {
 });
 
 // CSRF Vulnerability
-app.get('/form', (req, res) => {
+app.get('/form', csrfProtection, (req, res) => {
     res.send(`
         <form action="/submit" method="POST">
+            <input type="hidden" name="_csrf" value="${req.csrfToken()}" />
             <input type="text" name="data" />
             <button type="submit">Submit</button>
         </form>
     `);
 });
+
 
 app.post('/submit', (req, res) => {
     res.send('Form submitted');
