@@ -26,3 +26,5 @@ Audit de sécurité : Utilisez des outils comme OWASP ZAP pour scanner l'applica
 4. Documenter les résultats :
 Rédigez un rapport sur les vulnérabilités identifiées et les correctifs appliqués.
 Préparez une présentation des résultats et des mesures de sécurité mises en place et l'envoyez à #lawalalaoad@gmail.com
+
+Fork into your own repositery , create a new branch under your name (name_vulnerable-app) and work on this branch. At the end make a PR to my repositery.
