@@ -8,6 +8,7 @@ const escapeHtml = require('escape-html');
 
 const app = express();
 const port = 3000;
+const csrfProtect = csrf({ cookie: true })
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
@@ -51,16 +52,18 @@ app.get('/xss', (req, res) => {
 
 
 // CSRF Vulnerability
-app.get('/form', (req, res) => {
-    res.send(`
-        <form action="/submit" method="POST">
-            <input type="text" name="data" />
-            <button type="submit">Submit</button>
-        </form>
-    `);
+app.get('/form', csrfProtect, (req, res) => {
+    res.render('csrfForm', { csrfToken: req.csrfToken() })
+    // res.send(`
+    //     <form action="/submit" method="POST">
+    //         <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+    //         <input type="text" name="data" />
+    //         <button type="submit">Submit</button>
+    //     </form>
+    // `);
 });
 
-app.post('/submit', (req, res) => {
+app.post('/submit', csrfProtect, (req, res) => {
     res.send('Form submitted');
 });
 
